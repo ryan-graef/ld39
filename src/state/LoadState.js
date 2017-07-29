@@ -15,6 +15,10 @@ LoadState.prototype = {
             game.load.image(sprite.key, sprite.imagePath);
         }, this);
 
+        Config.spritesheets.forEach(function(sheet){
+            game.load.spritesheet(sheet.key, sheet.imagePath, sheet.frameWidth, sheet.frameHeight, sheet.frameMax, sheet.margin, sheet.spacing);
+        }, this);
+
         Config.animSprites.forEach(function(animSprite){
             game.load.atlasJSONHash(animSprite.key, animSprite.imagePath, animSprite.jsonPath);
         }, this);
