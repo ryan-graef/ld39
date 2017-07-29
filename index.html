@@ -1,0 +1,57 @@
+<html>
+<head>
+    <title>LD[Number]: [Theme]</title>
+    
+    <!-- stylesheets -->
+    <style type="text/css">
+        body { padding: 0; margin: 0; background-color: gray;}
+        #game{margin-left: auto; margin-right: auto;}
+    </style>
+
+    <!-- font family import -->
+   
+
+    <!-- javascript library files -->
+    <script type="text/javascript" src="lib/jquery/jquery.js"></script>
+    <script type="text/javascript" src="lib/phaser/phaser.js"></script>
+    <script type="text/javascript" src="lib/illuminated/illuminated.js"></script>
+    <script type="text/javascript" src="lib/plugins/phaser-illuminated.js"></script>
+
+
+    <!-- javascript project files -->
+    <script type="text/javascript" src="src/state/BootupState.js"></script>
+    <script type="text/javascript" src="src/state/SplashState.js"></script>
+    <script type="text/javascript" src="src/state/LoadState.js"></script>
+    <script type="text/javascript" src="src/state/MainState.js"></script>
+    <script type="text/javascript" src="src/util/Config.js"></script>
+    <script type="text/javascript" src="src/util/EventTracking.js"></script>
+</head>
+<body>
+    <div id="game">
+
+    </div>
+
+    <div class="fence-post" style="right: 0;"></div>
+    <div class="fence-post" style="left: 0;"></div>
+
+    <!-- ga tracking events -->
+    <script>
+        window.isDev = function(){
+            return (window.location.href.indexOf('localhost') > -1);
+        };
+
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        //UA-36591829-2 is for Cuda's Cubby.  Replace with your own google-provided code if you use this workbench.
+        if(!isDev){ 
+            ga('create', 'UA-36591829-2', 'auto');
+            ga('send', 'pageview');
+        }
+    </script>
+    <!-- entry file of javascript structure -->
+    <script type="text/javascript" src="app.js"></script>
+</body>
+</html>
