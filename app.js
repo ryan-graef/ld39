@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", function(event){
 	game.state.add('SplashState', new SplashState());
 	game.state.add('LoadState', new LoadState());
 	game.state.add('MainState', new MainState());
+	game.state.add('GameoverState', new GameoverState());
 	game.state.add('BootupState', new BootupState());
 
     game.state.start('BootupState');

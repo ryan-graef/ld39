@@ -5,8 +5,8 @@ BootupState.prototype = {
         console.log('preload bootup state');
 
         //configure the scaling to fit the window
-        //game.scale.minHeight = Config.size.height;
-        //game.scale.minWidth = Config.size.width;
+        game.scale.maxHeight = Config.size.height;
+        game.scale.maxWidth = Config.size.width;
         game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         game.stage.smoothed = false;
     },

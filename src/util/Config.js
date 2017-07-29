@@ -9,6 +9,7 @@ Config = {
         {key: "terminal", imagePath: "res/img/terminal.png"},
         {key: "key", imagePath: "res/img/key.png"},
         {key: "house", imagePath: "res/img/house.png"},
+        {key: "housenobox", imagePath: "res/img/housenobox.png"},
         {key: "powerline", imagePath: "res/img/powerline.png"}
     ],
     spritesheets: [
@@ -26,6 +27,11 @@ Config = {
     ],
     sfx: [
         //{key: "SfxKey", filePath: "path/to/audiofile"}
+        {key: "select", filePath: "res/sfx/select.wav"},
+        {key: "newHouse", filePath: "res/sfx/newhouse.wav"},
+        {key: "deadHouse", filePath: "res/sfx/deadhouse.wav"},
+        {key: "blip1", filePath: "res/sfx/blip1.wav"},
+        {key: "blip2", filePath: "res/sfx/blip2.wav"}
     ],
     //music loops by default
     music: [
