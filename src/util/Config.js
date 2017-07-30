@@ -1,6 +1,6 @@
 Config = {
-    name: "ReplaceWithGameName",
-    version: "0.0.0",
+    name: "Power Grid Manager",
+    version: "1.0.0",
     size: {width: 1280, height: 720},
     sprites: [
         //{key: "SpriteKey", imagePath: "path/to/image"}
@@ -11,7 +11,8 @@ Config = {
         {key: "powerline", imagePath: "res/img/powerline.png"},
         {key: "page1", imagePath: "res/img/page1.png"},
         {key: "page2", imagePath: "res/img/page2.png"},
-        {key: "page3", imagePath: "res/img/page3.png"}
+        {key: "page3", imagePath: "res/img/page3.png"},
+        {key: "terminalkeys", imagePath: "res/img/terminalkeys.png"}
     ],
     spritesheets: [
         {key: "housebar", imagePath: "res/img/housebar.png", frameWidth: 14, frameHeight: 89},
@@ -45,7 +46,8 @@ Config = {
     //music loops by default
     music: [
         //{key: "MusicKey", filePath: "path/to/audiofile"}
-        {key: "bgm", filePath: "res/sfx/bgm.ogg"}
+        {key: "bgm", filePath: "res/sfx/bgm.ogg"},
+        {key: "bgmslow", filePath: "res/sfx/bgmslow.ogg"},
     ],
     //will be populated by all the music objects after load
     musicObjects: { },

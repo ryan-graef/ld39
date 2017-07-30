@@ -1,6 +1,13 @@
 <html>
 <head>
-    <title>LD[Number]: [Theme]</title>
+    <title>LD39: Running out of Power</title>
+
+    <!-- These things make it easier to share the website. -->
+    <meta property="og:title" content="Power Grid Manager - A game made for LD39" />
+    <meta property="og:description" content="The Power Plant's grid management technology is grossly outdated, but somehow, you're still expected to keep things running." />
+    <meta property="og:site_name" content="Cuda's Cubby" />
+    <meta property="og:url" content="http://www.cudascubby.com/ld39" />
+    <meta property="og:image" content="res/img/splash.png" />
     
     <!-- stylesheets -->
     <style type="text/css">
@@ -24,6 +31,7 @@
     <script type="text/javascript" src="src/state/LoadState.js"></script>
     <script type="text/javascript" src="src/state/TutorialState.js"></script>
     <script type="text/javascript" src="src/state/MainState.js"></script>
+    <script type="text/javascript" src="src/state/TitleState.js"></script>
     <script type="text/javascript" src="src/state/GameoverState.js"></script>
     <script type="text/javascript" src="src/util/Config.js"></script>
     <script type="text/javascript" src="src/util/EventTracking.js"></script>
@@ -48,7 +56,7 @@
         })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
         //UA-36591829-2 is for Cuda's Cubby.  Replace with your own google-provided code if you use this workbench.
-        if(!isDev){ 
+        if(!isDev()){ 
             ga('create', 'UA-36591829-2', 'auto');
             ga('send', 'pageview');
         }

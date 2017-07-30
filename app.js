@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", function(event){
 	game.state.add('MainState', new MainState());
 	game.state.add('GameoverState', new GameoverState());
 	game.state.add('TutorialState', new TutorialState());
+	game.state.add('TitleState', new TitleState());
 	game.state.add('BootupState', new BootupState());
 
     game.state.start('BootupState');

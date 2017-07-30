@@ -10,6 +10,8 @@ EventTracking = {
      *                      level 1".
      */
     logEvent: function(action, label){
-        ga('send', 'event', Config.name + " v" + Config.version + (isDev() ? "dev" : ""), action, label);
+        if(!isDev()){
+            ga('send', 'event', Config.name + " v" + Config.version + (isDev() ? "dev" : ""), action, label);
+        }
     }
 }

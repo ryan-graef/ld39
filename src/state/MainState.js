@@ -8,7 +8,10 @@ MainState.prototype = {
     create: function(){
         console.log('create main state');
 
-        Config.musicObjects.bgm.play("", 0, 0.3, true);
+        if(!Config.muted && !Config.musicObjects.bgm.isPlaying){
+            Config.musicObjects.bgmslow.stop();
+            Config.musicObjects.bgm.play("", 0, 0.3, true);
+        }
 
         //remove this line if not using lighting effects
         game.plugins.add(Phaser.Plugin.PhaserIlluminated);
