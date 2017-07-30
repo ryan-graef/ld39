@@ -8,6 +8,8 @@ MainState.prototype = {
     create: function(){
         console.log('create main state');
 
+        Config.musicObjects.bgm.play("", 0, 0.3, true);
+
         //remove this line if not using lighting effects
         game.plugins.add(Phaser.Plugin.PhaserIlluminated);
 
@@ -20,6 +22,33 @@ MainState.prototype = {
                     {string: ' ← ', keyCode: Phaser.Keyboard.LEFT}, {string: ' ↑ ', keyCode: Phaser.Keyboard.UP}, {string: ' → ', keyCode: Phaser.Keyboard.RIGHT}, {string: ' ↓ ', keyCode: Phaser.Keyboard.DOWN}];
 
         this.createKeyboard();
+
+        this.blueSwitch = game.add.sprite(1179, 531, 'switchblue', 1);
+        this.redSwitch = game.add.sprite(1163, 430, 'switchred', 1);
+        this.blueSwitch.inputEnabled = true;
+        this.redSwitch.inputEnabled = true;
+        this.blueSwitch.events.onInputDown.add(function(){
+            this.blueSwitch.frame = 1;
+            this.houses.forEach(function(house){
+                if(house.lockedBy === 'blue'){
+                    house.lockedBy = null;
+                    house.sprite.frame = 0;
+                    Config.sfxObjects.switch.play();
+                    house.text.setText(house.activeKey.string);
+                }
+            }, this);
+        }, this);
+        this.redSwitch.events.onInputDown.add(function(){
+            this.redSwitch.frame = 1;
+            this.houses.forEach(function(house){
+                if(house.lockedBy === 'red'){
+                    house.lockedBy = null;
+                    house.sprite.frame = 0;
+                    Config.sfxObjects.switch.play();
+                    house.text.setText(house.activeKey.string);
+                }
+            }, this);
+        }, this);
 
         this.houses = [];
         this.createHouse();
@@ -44,8 +73,13 @@ MainState.prototype = {
 
     update: function(){
         this.keySprites.forEach(function(keySprite){
-            keySprite.text.x = keySprite.sprite.centerX;
-            keySprite.text.y = keySprite.sprite.centerY;
+            if(keySprite.sprite.frame === 0){
+                keySprite.text.x = keySprite.sprite.centerX;
+                keySprite.text.y = keySprite.sprite.centerY + 15;
+            } else{
+                keySprite.text.x = keySprite.sprite.centerX - 3;
+                keySprite.text.y = keySprite.sprite.centerY - 20;
+            }
         });
 
         if(game.input.keyboard.lastKey){
@@ -54,9 +88,20 @@ MainState.prototype = {
                     if(game.input.keyboard.lastKey.isDown){
                         keySprite.sprite.anchor.y = -0.15;
 
+                        if(keySprite.sprite.frame === 1 && !Config.sfxObjects.brokenkey.playing){
+                            Config.sfxObjects.brokenkey.play();
+                        }
+
                         this.houses.forEach(function(house){
-                            if(house.activeKey.keyCode === game.input.keyboard.lastKey.keyCode){
+                            if(house.activeKey.keyCode === game.input.keyboard.lastKey.keyCode && !house.lockedBy && keySprite.sprite.frame === 0){
                                 if(house.life > 0){
+
+                                    //will this key break?
+                                    if(game.rnd.integerInRange(0, 500) > 425) {
+                                        keySprite.sprite.frame = 1;
+                                        Config.sfxObjects.break.play();
+                                    }
+
                                     house.activeKey = this.keys[game.rnd.integerInRange(0, this.keys.length - 1)];
                                     house.text.setText(house.activeKey.string);
                                     house.life = house.maxLife;
@@ -84,6 +129,21 @@ MainState.prototype = {
         }
 
         this.houses.forEach(function(house) {
+            //will this house get locked?
+            if(game.rnd.integerInRange(0, 1000) > 998 && !house.lockedBy){
+                Config.sfxObjects.locked.play();
+                house.sprite.frame = 1;
+                if(game.rnd.sign() > 0){
+                    house.lockedBy = 'red';
+                    house.text.setText('RED');
+                    this.redSwitch.frame = 0; 
+                } else {
+                    house.lockedBy = 'blue';
+                    house.text.setText('BLUE');
+                    this.blueSwitch.frame = 0;
+                }
+            }
+
             if(house.life > 0){
                 house.life--;
 
@@ -183,7 +243,7 @@ MainState.prototype = {
 
             var row = Math.floor(this.houses.length / 8);
 
-            var sprite = game.add.sprite(70 + 125*(this.houses.length%8), 50 + 115 * row, 'house');
+            var sprite = game.add.sprite(70 + 125*(this.houses.length%8), 50 + 115 * row, 'house', 0);
             var key = this.keys[game.rnd.integerInRange(0, this.keys.length - 1)];
             var text = game.add.text(sprite.centerX, sprite.centerY + 20, key.string, textStyle);
             text.anchor.x = 0.5;
@@ -203,7 +263,8 @@ MainState.prototype = {
                 maxLife: 750,
                 timeSpriteFull: timeSpriteFull,
                 timeSpriteEmpty: timeSpriteEmpty,
-                powerlineSprite: powerlineSprite
+                powerlineSprite: powerlineSprite,
+                lockedBy: null
             });
 
             Config.sfxObjects.newHouse.play();
@@ -225,8 +286,16 @@ MainState.prototype = {
             }
 
             var xPos = 85 + xOffset;
-            var yPos = 440 + row * 44;
-            var sprite = game.add.sprite(xPos, yPos, 'key');
+            var yPos = 410 + row * 44;
+            var sprite = game.add.sprite(xPos, yPos, 'key', 0);
+            sprite.inputEnabled = true;
+            sprite.events.onInputDown.add(function(){
+                if(sprite.frame === 1){
+                    Config.sfxObjects.switch.play();
+                }
+
+                sprite.frame = 0;
+            }, this);
 
             //special case for arrow keys
             if(row >= 4){
@@ -235,7 +304,7 @@ MainState.prototype = {
                 sprite.y = 345 + row * 44;
             }
 
-            var text = game.add.text(sprite.centerX, sprite.centerY - 5, key.string, textStyle);
+            var text = game.add.text(sprite.centerX, sprite.centerY, key.string, textStyle);
             text.anchor.set(0.5);
 
             this.keySprites.push({
