@@ -9,6 +9,8 @@ BootupState.prototype = {
         game.scale.maxWidth = Config.size.width;
         game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         game.stage.smoothed = false;
+
+        game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
     },
 
     create: function(){

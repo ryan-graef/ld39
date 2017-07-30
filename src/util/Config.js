@@ -8,7 +8,10 @@ Config = {
         {key: "pixel-guy", imagePath: "res/img/pixel-guy.png"},
         {key: "terminal", imagePath: "res/img/terminal.png"},
         {key: "housenobox", imagePath: "res/img/housenobox.png"},
-        {key: "powerline", imagePath: "res/img/powerline.png"}
+        {key: "powerline", imagePath: "res/img/powerline.png"},
+        {key: "page1", imagePath: "res/img/page1.png"},
+        {key: "page2", imagePath: "res/img/page2.png"},
+        {key: "page3", imagePath: "res/img/page3.png"}
     ],
     spritesheets: [
         {key: "housebar", imagePath: "res/img/housebar.png", frameWidth: 14, frameHeight: 89},

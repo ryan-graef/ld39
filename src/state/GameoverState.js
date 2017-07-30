@@ -3,6 +3,8 @@ GameoverState = function(){ }
 GameoverState.prototype = {
     preload: function(){
         console.log('preload gameover state');
+
+        
     },
 
     create: function(){
@@ -18,28 +20,53 @@ GameoverState.prototype = {
 
         this.createKeyboard();
 
-        var textStyle = { font: "48px Arial", fill: "#21E026", align: 'center'};
-        var textStyleSmall = { font: "28px Arial", fill: "#21E026", align: 'center'};
+        this.createText();
+
+        this.blueSwitch = game.add.sprite(1179, 531, 'switchblue', 1);
+        this.redSwitch = game.add.sprite(1163, 430, 'switchred', 1);
+    },
+
+    createText: function() {
+        var textStyle = {fill: "#21E026", align: 'center'};
+        var textStyleSmall = {fill: "#21E026", align: 'center'};
         this.text1 = game.add.text(game.world.centerX - 100, 75, 'You\'re fired!', textStyle);
+        this.text1.font = 'Share Tech Mono';
+        this.text1.fontSize = 36;
         this.text2 = game.add.text(game.world.centerX - 100, 150, 'There are riots in the streets over the lack of power!', textStyleSmall);
+        this.text2.font = 'Share Tech Mono';
+        this.text2.fontSize = 28;
         this.text3 = game.add.text(game.world.centerX - 100, 200, 'At least you managed to keep the lights on for a little while.', textStyleSmall);
+        this.text3.font = 'Share Tech Mono';
+        this.text3.fontSize = 28;
         this.text4 = game.add.text(game.world.centerX - 100, 275, 'Rumor has it the power plant in the next town over is hiring.\nWant to try again?', textStyleSmall);
+        this.text4.font = 'Share Tech Mono';
+        this.text4.fontSize = 28;
         this.text1.anchor.set(0.5);
         this.text2.anchor.set(0.5);
         this.text3.anchor.set(0.5);
         this.text4.anchor.set(0.5);
 
-        var textStyleScore = { font: "24px Arial", fill: "#21E026", align: 'right'};
-        this.scoreText = game.add.text(800, 345, 'Score: ' + Config.score, textStyleScore);
+        var textStyleScore = {fill: "#21E026", align: 'right'};
+        this.scoreText = game.add.text(750, 345, 'Score: ' + Config.score, textStyleScore);
+        this.scoreText.font = 'Share Tech Mono';
+        this.scoreText.fontSize = 28;
 
         this.restartText = game.add.text(125 + 40, 345, 'R to restart', textStyleScore);
+        this.restartText.font = 'Share Tech Mono';
+        this.restartText.fontSize = 28;
     },
 
     update: function(){
         this.keySprites.forEach(function(keySprite){
-            keySprite.text.x = keySprite.sprite.centerX;
-            keySprite.text.y = keySprite.sprite.centerY;
+            if(keySprite.sprite.frame === 0){
+                keySprite.text.x = keySprite.sprite.centerX;
+                keySprite.text.y = keySprite.sprite.centerY + 15;
+            } else{
+                keySprite.text.x = keySprite.sprite.centerX - 3;
+                keySprite.text.y = keySprite.sprite.centerY - 20;
+            }
         });
+
         if(game.input.keyboard.lastKey){
             this.keySprites.forEach(function(keySprite){
                 if(keySprite.key.keyCode === game.input.keyboard.lastKey.keyCode){
@@ -66,7 +93,7 @@ GameoverState.prototype = {
 
     createKeyboard: function() {
         this.keySprites = [];
-        var textStyle = { font: "20px Arial" };
+        //var textStyle = { font: "57px Ubuntu+Mono" };
         var lastRow = -1;
         var xOffset = 0;
         this.keys.forEach(function(key, index){
@@ -79,8 +106,16 @@ GameoverState.prototype = {
             }
 
             var xPos = 85 + xOffset;
-            var yPos = 440 + row * 44;
-            var sprite = game.add.sprite(xPos, yPos, 'key');
+            var yPos = 410 + row * 44;
+            var sprite = game.add.sprite(xPos, yPos, 'key', 0);
+            sprite.inputEnabled = true;
+            sprite.events.onInputDown.add(function(){
+                if(sprite.frame === 1){
+                    Config.sfxObjects.switch.play();
+                }
+
+                sprite.frame = 0;
+            }, this);
 
             //special case for arrow keys
             if(row >= 4){
@@ -89,7 +124,9 @@ GameoverState.prototype = {
                 sprite.y = 345 + row * 44;
             }
 
-            var text = game.add.text(sprite.centerX, sprite.centerY - 5, key.string, textStyle);
+            var text = game.add.text(sprite.centerX, sprite.centerY, key.string);
+            text.font = 'Ubuntu Mono';
+            text.fontSize = 20;
             text.anchor.set(0.5);
 
             this.keySprites.push({

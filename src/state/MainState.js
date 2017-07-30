@@ -18,7 +18,7 @@ MainState.prototype = {
         this.keys = [{string: ' 1 ', keyCode: Phaser.Keyboard.ONE}, {string: ' 2 ', keyCode: Phaser.Keyboard.TWO}, {string: ' 3 ', keyCode: Phaser.Keyboard.THREE}, {string: ' 4 ', keyCode: Phaser.Keyboard.FOUR}, {string: ' 5 ', keyCode: Phaser.Keyboard.FIVE}, {string: ' 6 ', keyCode: Phaser.Keyboard.SIX}, {string: ' 7 ', keyCode: Phaser.Keyboard.SEVEN}, {string: ' 8 ', keyCode: Phaser.Keyboard.EIGHT}, {string: ' 9 ', keyCode: Phaser.Keyboard.NINE}, {string: ' 0 ', keyCode: Phaser.Keyboard.ZERO}, {string: ' = ', keyCode: Phaser.Keyboard.EQUALS}, {string: ' [ ', keyCode: Phaser.Keyboard.OPEN_BRACKET}, {string: ' ] ', keyCode: Phaser.Keyboard.CLOSED_BRACKET}, {string: 'DEL', keyCode: Phaser.Keyboard.DELETE},
                     {string: 'ESC', keyCode: Phaser.Keyboard.ESC}, {string: ' Q ', keyCode: Phaser.Keyboard.Q}, {string: ' W ', keyCode: Phaser.Keyboard.W}, {string: ' E ', keyCode: Phaser.Keyboard.E}, {string: ' R ', keyCode: Phaser.Keyboard.R}, {string: ' T ', keyCode: Phaser.Keyboard.T}, {string: ' Y ', keyCode: Phaser.Keyboard.Y}, {string: ' U ', keyCode: Phaser.Keyboard.U}, {string: ' I ', keyCode: Phaser.Keyboard.I}, {string: ' O ', keyCode: Phaser.Keyboard.O}, {string: ' P ', keyCode: Phaser.Keyboard.P}, {string: ' RET ', keyCode: Phaser.Keyboard.ENTER}, 
                     {string: 'CTL', keyCode: Phaser.Keyboard.CONTROL}, {string: ' A ', keyCode: Phaser.Keyboard.A}, {string: ' S ', keyCode: Phaser.Keyboard.S}, {string: ' D ', keyCode: Phaser.Keyboard.D}, {string: ' F ', keyCode: Phaser.Keyboard.F}, {string: ' G ', keyCode: Phaser.Keyboard.G}, {string: ' H ', keyCode: Phaser.Keyboard.H}, {string: 'J ', keyCode: Phaser.Keyboard.J}, {string: ' K ', keyCode: Phaser.Keyboard.K}, {string: ' L ', keyCode: Phaser.Keyboard.L}, {string: ' ; ', keyCode: Phaser.Keyboard.COLON}, //{string: ' RUN ', keyCode: null}, {string: ' BRK ', keyCode: null},
-                    {string: 'SFT', keyCode: Phaser.Keyboard.SHIFT}, {string: ' Z ', keyCode: Phaser.Keyboard.Z}, {string: ' X ', keyCode: Phaser.Keyboard.X}, {string: ' C ', keyCode: Phaser.Keyboard.C}, {string: ' V ', keyCode: Phaser.Keyboard.V}, {string: ' B ', keyCode: Phaser.Keyboard.B}, {string: ' N ', keyCode: Phaser.Keyboard.N}, {string: ' M ', keyCode: Phaser.Keyboard.M}, {string: ' , ', keyCode: Phaser.Keyboard.COMMA}, {string: ' . ', keyCode: Phaser.Keyboard.PERIOD}, {string: ' / ', keyCode: Phaser.Keyboard.QUESTION_MARK}, {string: 'SHFT', keyCode: Phaser.Keyboard.SHIFT},
+                    {string: 'SFT', keyCode: Phaser.Keyboard.SHIFT}, {string: ' Z ', keyCode: Phaser.Keyboard.Z}, {string: ' X ', keyCode: Phaser.Keyboard.X}, {string: ' C ', keyCode: Phaser.Keyboard.C}, {string: ' V ', keyCode: Phaser.Keyboard.V}, {string: ' B ', keyCode: Phaser.Keyboard.B}, {string: ' N ', keyCode: Phaser.Keyboard.N}, {string: ' M ', keyCode: Phaser.Keyboard.M}, {string: ' , ', keyCode: Phaser.Keyboard.COMMA}, {string: ' . ', keyCode: Phaser.Keyboard.PERIOD}, {string: ' / ', keyCode: Phaser.Keyboard.QUESTION_MARK}, {string: 'SFT', keyCode: Phaser.Keyboard.SHIFT},
                     {string: ' ← ', keyCode: Phaser.Keyboard.LEFT}, {string: ' ↑ ', keyCode: Phaser.Keyboard.UP}, {string: ' → ', keyCode: Phaser.Keyboard.RIGHT}, {string: ' ↓ ', keyCode: Phaser.Keyboard.DOWN}];
 
         this.createKeyboard();
@@ -57,9 +57,13 @@ MainState.prototype = {
         this.timeUntilNextHouse = this.timeBetweenHouses;
         Config.score = 0;
 
-        var textStyle = { font: "24px Arial", fill: "#21E026", align: 'right'};
-        this.scoreLabel = game.add.text(800, 345, 'Score: ', textStyle);
+        var textStyle = {fill: "#21E026", align: 'right'};
+        this.scoreLabel = game.add.text(750, 345, 'SCORE: ', textStyle);
+        this.scoreLabel.font = 'Share Tech Mono';
+        this.scoreLabel.fontSize = 28;
         this.scoreText = game.add.text(875, 345, '0', textStyle);
+        this.scoreText.font = 'Share Tech Mono';
+        this.scoreText.fontSize = 28;
 
         this.lifeCount = 3;
         this.lives = [];
@@ -97,7 +101,7 @@ MainState.prototype = {
                                 if(house.life > 0){
 
                                     //will this key break?
-                                    if(game.rnd.integerInRange(0, 500) > 425) {
+                                    if(game.rnd.integerInRange(0, 500) > 450) {
                                         keySprite.sprite.frame = 1;
                                         Config.sfxObjects.break.play();
                                     }
@@ -130,7 +134,7 @@ MainState.prototype = {
 
         this.houses.forEach(function(house) {
             //will this house get locked?
-            if(game.rnd.integerInRange(0, 1000) > 998 && !house.lockedBy){
+            if(game.rnd.integerInRange(0, 3000) > 2998 && !house.lockedBy){
                 Config.sfxObjects.locked.play();
                 house.sprite.frame = 1;
                 if(game.rnd.sign() > 0){
@@ -139,7 +143,7 @@ MainState.prototype = {
                     this.redSwitch.frame = 0; 
                 } else {
                     house.lockedBy = 'blue';
-                    house.text.setText('BLUE');
+                    house.text.setText('BLU');
                     this.blueSwitch.frame = 0;
                 }
             }
@@ -239,13 +243,15 @@ MainState.prototype = {
 
     createHouse: function() {
         if(this.houses.length < 16){
-            var textStyle = { font: "18px Arial", fill: "#21E026"}
+            var textStyle = {fill: "#21E026"}
 
             var row = Math.floor(this.houses.length / 8);
 
             var sprite = game.add.sprite(70 + 125*(this.houses.length%8), 50 + 115 * row, 'house', 0);
             var key = this.keys[game.rnd.integerInRange(0, this.keys.length - 1)];
             var text = game.add.text(sprite.centerX, sprite.centerY + 20, key.string, textStyle);
+            text.font = 'Share Tech Mono';
+            text.fontSize = 20;
             text.anchor.x = 0.5;
 
             var timeSpriteEmpty = game.add.sprite(sprite.x + 55, sprite.y + sprite.height, 'housebar', 0);
@@ -259,8 +265,8 @@ MainState.prototype = {
                 sprite: sprite,
                 activeKey: key,
                 text: text,
-                life: 750,
-                maxLife: 750,
+                life: 1500,
+                maxLife: 1500,
                 timeSpriteFull: timeSpriteFull,
                 timeSpriteEmpty: timeSpriteEmpty,
                 powerlineSprite: powerlineSprite,
@@ -273,7 +279,7 @@ MainState.prototype = {
 
     createKeyboard: function() {
         this.keySprites = [];
-        var textStyle = { font: "20px Arial" };
+        //var textStyle = { font: "57px Ubuntu+Mono" };
         var lastRow = -1;
         var xOffset = 0;
         this.keys.forEach(function(key, index){
@@ -304,7 +310,9 @@ MainState.prototype = {
                 sprite.y = 345 + row * 44;
             }
 
-            var text = game.add.text(sprite.centerX, sprite.centerY, key.string, textStyle);
+            var text = game.add.text(sprite.centerX, sprite.centerY, key.string);
+            text.font = 'Ubuntu Mono';
+            text.fontSize = 20;
             text.anchor.set(0.5);
 
             this.keySprites.push({

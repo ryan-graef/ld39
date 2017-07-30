@@ -37,8 +37,7 @@ LoadState.prototype = {
 
         Config.music.forEach(function(music){
             game.load.audio(music.key, music.filePath);
-        }, this);
-        
+        }, this);     
     },
 
     create: function(){
@@ -53,7 +52,7 @@ LoadState.prototype = {
         }, this);
 
         console.log('kicking off the game');
-        game.state.start('MainState');
+        game.state.start('TutorialState');
     },
 
     update: function(){
