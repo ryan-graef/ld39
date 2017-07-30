@@ -52,7 +52,7 @@ LoadState.prototype = {
         }, this);
 
         console.log('kicking off the game');
-        game.state.start('GameoverState');
+        game.state.start('TitleState');
     },
 
     update: function(){
