@@ -63,7 +63,7 @@ MainState.prototype = {
         this.createHouse();
         this.createHouse();
 
-        this.timeBetweenHouses = 1500;
+        this.timeBetweenHouses = 2000;
         this.timeUntilNextHouse = this.timeBetweenHouses;
         Config.score = 0;
 
@@ -314,7 +314,9 @@ MainState.prototype = {
             powerlineSprite.alpha = 0;
 
             if(this.houses[this.houses.length -1]){
-                this.houses[this.houses.length-1].powerlineSprite.alpha = 1;
+                if(this.houses.length != 8 &&  this.houses.length < 16){
+                    this.houses[this.houses.length-1].powerlineSprite.alpha = 1;
+                }
             }
             this.houses.push({
                 sprite: sprite,
