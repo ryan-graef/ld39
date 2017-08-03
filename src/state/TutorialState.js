@@ -25,13 +25,24 @@ TutorialState.prototype = {
         if(game.input.keyboard.lastKey){
             if(game.input.keyboard.lastKey.isDown){
                 if(game.input.keyboard.lastKey.repeats === 1){
-                    Config.sfxObjects.select.play();
-                    if(this.page2.alpha === 0){
-                        this.page2.alpha = 1;
-                    }else if(this.page3.alpha === 0) {
-                        this.page3.alpha = 1;
-                    }else{
-                        game.state.start('TitleState');
+                    if(game.input.keyboard.lastKey.keyCode === Phaser.Keyboard.ESC){
+                        Config.sfxObjects.select.play();
+                        if(Config.musicObjects.bgmslow.isPlaying){
+                            Config.musicObjects.bgmslow.stop();
+                            Config.muted = true;
+                        } else {
+                            Config.musicObjects.bgmslow.play();
+                            Config.muted = false;
+                        }
+                    } else {
+                        Config.sfxObjects.select.play();
+                        if(this.page2.alpha === 0){
+                            this.page2.alpha = 1;
+                        }else if(this.page3.alpha === 0) {
+                            this.page3.alpha = 1;
+                        }else{
+                            game.state.start('TitleState');
+                        }
                     }
                 }        
             }

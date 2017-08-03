@@ -24,6 +24,11 @@ MainState.prototype = {
                     {string: 'SFT', keyCode: Phaser.Keyboard.SHIFT}, {string: ' Z ', keyCode: Phaser.Keyboard.Z}, {string: ' X ', keyCode: Phaser.Keyboard.X}, {string: ' C ', keyCode: Phaser.Keyboard.C}, {string: ' V ', keyCode: Phaser.Keyboard.V}, {string: ' B ', keyCode: Phaser.Keyboard.B}, {string: ' N ', keyCode: Phaser.Keyboard.N}, {string: ' M ', keyCode: Phaser.Keyboard.M}, {string: ' , ', keyCode: Phaser.Keyboard.COMMA}, {string: ' . ', keyCode: Phaser.Keyboard.PERIOD}, {string: ' / ', keyCode: Phaser.Keyboard.QUESTION_MARK}, {string: 'SFT', keyCode: Phaser.Keyboard.SHIFT},
                     {string: ' ← ', keyCode: Phaser.Keyboard.LEFT}, {string: ' ↑ ', keyCode: Phaser.Keyboard.UP}, {string: ' → ', keyCode: Phaser.Keyboard.RIGHT}, {string: ' ↓ ', keyCode: Phaser.Keyboard.DOWN}];
 
+        this.playableKeys = [{string: ' 1 ', keyCode: Phaser.Keyboard.ONE}, {string: ' 2 ', keyCode: Phaser.Keyboard.TWO}, {string: ' 3 ', keyCode: Phaser.Keyboard.THREE}, {string: ' 4 ', keyCode: Phaser.Keyboard.FOUR}, {string: ' 5 ', keyCode: Phaser.Keyboard.FIVE}, {string: ' 6 ', keyCode: Phaser.Keyboard.SIX}, {string: ' 7 ', keyCode: Phaser.Keyboard.SEVEN}, {string: ' 8 ', keyCode: Phaser.Keyboard.EIGHT}, {string: ' 9 ', keyCode: Phaser.Keyboard.NINE}, {string: ' 0 ', keyCode: Phaser.Keyboard.ZERO},
+            {string: ' Q ', keyCode: Phaser.Keyboard.Q}, {string: ' W ', keyCode: Phaser.Keyboard.W}, {string: ' E ', keyCode: Phaser.Keyboard.E}, {string: ' R ', keyCode: Phaser.Keyboard.R}, {string: ' T ', keyCode: Phaser.Keyboard.T}, {string: ' Y ', keyCode: Phaser.Keyboard.Y}, {string: ' U ', keyCode: Phaser.Keyboard.U}, {string: ' I ', keyCode: Phaser.Keyboard.I}, {string: ' O ', keyCode: Phaser.Keyboard.O}, {string: ' P ', keyCode: Phaser.Keyboard.P}, 
+            {string: ' A ', keyCode: Phaser.Keyboard.A}, {string: ' S ', keyCode: Phaser.Keyboard.S}, {string: ' D ', keyCode: Phaser.Keyboard.D}, {string: ' F ', keyCode: Phaser.Keyboard.F}, {string: ' G ', keyCode: Phaser.Keyboard.G}, {string: ' H ', keyCode: Phaser.Keyboard.H}, {string: 'J ', keyCode: Phaser.Keyboard.J}, {string: ' K ', keyCode: Phaser.Keyboard.K}, {string: ' L ', keyCode: Phaser.Keyboard.L},
+            {string: ' Z ', keyCode: Phaser.Keyboard.Z}, {string: ' X ', keyCode: Phaser.Keyboard.X}, {string: ' C ', keyCode: Phaser.Keyboard.C}, {string: ' V ', keyCode: Phaser.Keyboard.V}, {string: ' B ', keyCode: Phaser.Keyboard.B}, {string: ' N ', keyCode: Phaser.Keyboard.N}, {string: ' M ', keyCode: Phaser.Keyboard.M}];
+
         this.createKeyboard();
 
         this.blueSwitch = game.add.sprite(1179, 531, 'switchblue', 1);
@@ -55,6 +60,8 @@ MainState.prototype = {
 
         this.houses = [];
         this.createHouse();
+        this.createHouse();
+        this.createHouse();
 
         this.timeBetweenHouses = 1500;
         this.timeUntilNextHouse = this.timeBetweenHouses;
@@ -76,9 +83,14 @@ MainState.prototype = {
             this.lives.push(lifeSprite);
         }
 
+        this.timeSinceLastLock = 0;
+        this.difficultyMultiplier = 1;
+
     },
 
     update: function(){
+        this.difficultyMultiplier += 0.0005;
+        console.log(this.difficultyMultiplier);
         this.keySprites.forEach(function(keySprite){
             if(keySprite.sprite.frame === 0){
                 keySprite.text.x = keySprite.sprite.centerX;
@@ -97,21 +109,25 @@ MainState.prototype = {
 
                         if(keySprite.sprite.frame === 1 && !Config.sfxObjects.brokenkey.playing){
                             Config.sfxObjects.brokenkey.play();
+                        }else{
+                            this.playableKeys.forEach(function(playableKey){
+                                if(playableKey.keyCode === game.input.keyboard.lastKey.keyCode){
+                                    //will this key break?
+                                    if(game.rnd.integerInRange(0, 1000) > 1000-(5*this.difficultyMultiplier)) {
+                                        keySprite.sprite.frame = 1;
+                                        Config.sfxObjects.break.play();
+                                    }
+                                }
+                            }, this);
                         }
+                            
 
                         this.houses.forEach(function(house){
                             if(house.activeKey.keyCode === game.input.keyboard.lastKey.keyCode && !house.lockedBy && keySprite.sprite.frame === 0){
                                 if(house.life > 0){
-
-                                    //will this key break?
-                                    if(game.rnd.integerInRange(0, 500) > 450) {
-                                        keySprite.sprite.frame = 1;
-                                        Config.sfxObjects.break.play();
-                                    }
-
-                                    house.activeKey = this.keys[game.rnd.integerInRange(0, this.keys.length - 1)];
+                                    house.activeKey = this.playableKeys[game.rnd.integerInRange(0, this.playableKeys.length - 1)];
                                     house.text.setText(house.activeKey.string);
-                                    house.life = house.maxLife;
+                                    house.life = house.maxLife - Math.floor(10*this.difficultyMultiplier);
                                     Config.sfxObjects.select.play();
 
                                     var aliveHouseCount = 0;
@@ -135,10 +151,21 @@ MainState.prototype = {
             }, this);
         }
 
-        this.houses.forEach(function(house) {
-            //will this house get locked?
-            if(game.rnd.integerInRange(0, 3000) > 2998 && !house.lockedBy){
-                Config.sfxObjects.locked.play();
+        //will a house get locked?
+        if(game.rnd.integerInRange(0, 48000) > (48060 - Math.floor((this.timeSinceLastLock*this.difficultyMultiplier)))){
+            Config.sfxObjects.locked.play();
+            this.timeSinceLastLock = 0;
+
+
+            var unlockedHouses = [];
+            this.houses.forEach(function(house){
+                if(!house.lockedBy && house.life != -1){
+                    unlockedHouses.push(house);
+                }
+            }, this);
+
+            if(unlockedHouses.length > 0){
+                var house = unlockedHouses[game.rnd.integerInRange(0, unlockedHouses.length -1)];
                 house.sprite.frame = 1;
                 if(game.rnd.sign() > 0){
                     house.lockedBy = 'red';
@@ -150,7 +177,11 @@ MainState.prototype = {
                     this.blueSwitch.frame = 0;
                 }
             }
+        } else {
+            this.timeSinceLastLock++;
+        }
 
+        this.houses.forEach(function(house) {
             if(house.life > 0){
                 house.life--;
 
@@ -193,7 +224,7 @@ MainState.prototype = {
                 if(house.life === 0){
                     house.life--;
                     Config.sfxObjects.deadHouse.play();
-                    house.text.kill();
+                    house.text.setText('');
 
                     this.lifeCount--;
 
@@ -214,7 +245,7 @@ MainState.prototype = {
 
         this.timeUntilNextHouse--;
         if(this.timeUntilNextHouse < 0){
-            this.timeUntilNextHouse = this.timeBetweenHouses;
+            this.timeUntilNextHouse = Math.floor(this.timeBetweenHouses*this.difficultyMultiplier/2);
 
             if(this.houses.length != 8 &&  this.houses.length < 16){
                 this.houses[this.houses.length-1].powerlineSprite.alpha = 1;
@@ -238,6 +269,23 @@ MainState.prototype = {
                 }
             }
         }
+
+        if(game.input.keyboard.lastKey){
+            if(game.input.keyboard.lastKey.isDown){
+                if(game.input.keyboard.lastKey.repeats === 1){
+                    if(game.input.keyboard.lastKey.keyCode === Phaser.Keyboard.ESC){
+                        Config.sfxObjects.select.play();
+                        if(Config.musicObjects.bgm.isPlaying){
+                            Config.musicObjects.bgm.stop();
+                            Config.muted = true;
+                        } else {
+                            Config.musicObjects.bgm.play();
+                            Config.muted = false;
+                        }
+                    }
+                }
+            }
+        }
     },
 
     render: function(){
@@ -251,7 +299,7 @@ MainState.prototype = {
             var row = Math.floor(this.houses.length / 8);
 
             var sprite = game.add.sprite(70 + 125*(this.houses.length%8), 50 + 115 * row, 'house', 0);
-            var key = this.keys[game.rnd.integerInRange(0, this.keys.length - 1)];
+            var key = this.playableKeys[game.rnd.integerInRange(0, this.playableKeys.length - 1)];
             var text = game.add.text(sprite.centerX, sprite.centerY + 20, key.string, textStyle);
             text.font = 'Share Tech Mono';
             text.fontSize = 20;
@@ -264,6 +312,10 @@ MainState.prototype = {
 
             var powerlineSprite = game.add.sprite(sprite.x + 75, sprite.y + 25, 'powerline');
             powerlineSprite.alpha = 0;
+
+            if(this.houses[this.houses.length -1]){
+                this.houses[this.houses.length-1].powerlineSprite.alpha = 1;
+            }
             this.houses.push({
                 sprite: sprite,
                 activeKey: key,
@@ -276,7 +328,24 @@ MainState.prototype = {
                 lockedBy: null
             });
 
+
+
             Config.sfxObjects.newHouse.play();
+        } else {
+            var deadHouse = null;
+            this.houses.forEach(function(house){
+                if(house.life < 0){
+                    deadHouse = house;
+                }
+            }, this);
+
+            if(deadHouse){
+                deadHouse.life = deadHouse.maxLife;
+                deadHouse.key = this.playableKeys[game.rnd.integerInRange(0, this.playableKeys.length - 1)];
+                deadHouse.text.setText(deadHouse.key.string);
+                deadHouse.sprite.alpha = 1;
+                deadHouse.lockedBy = null;
+            }
         }
     },
 

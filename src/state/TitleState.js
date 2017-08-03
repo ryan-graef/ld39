@@ -32,7 +32,7 @@ TitleState.prototype = {
         this.textr.font = 'Share Tech Mono';
         this.textr.fontSize = 28;
         this.textr.anchor.set(0.5);
-        this.textm = game.add.text(game.world.centerX - 100, 265, 'M - ' + (Config.muted ? 'Unmute Music' : 'Mute Music'), textStyle);
+        this.textm = game.add.text(game.world.centerX - 100, 265, 'ESC - ' + (Config.muted ? 'Unmute Music' : 'Mute Music') + " | Works in game too!", textStyle);
         this.textm.font = 'Share Tech Mono';
         this.textm.fontSize = 28;
         this.textm.anchor.set(0.5);
@@ -57,14 +57,14 @@ TitleState.prototype = {
                     } else if(game.input.keyboard.lastKey.keyCode === Phaser.Keyboard.H){
                         game.state.start('TutorialState');
                         Config.sfxObjects.select.play();
-                    } else if(game.input.keyboard.lastKey.keyCode === Phaser.Keyboard.M){
+                    } else if(game.input.keyboard.lastKey.keyCode === Phaser.Keyboard.ESC){
                         Config.sfxObjects.select.play();
                         if(Config.musicObjects.bgmslow.isPlaying){
-                            this.textm.setText('M - Unmute Music');
+                            this.textm.setText('ESC - Unmute Music' + " | Works in game too!");
                             Config.musicObjects.bgmslow.stop();
                             Config.muted = true;
                         } else {
-                            this.textm.setText('M - Mute Music');
+                            this.textm.setText('ESC - Mute Music' + " | Works in game too!");
                             Config.musicObjects.bgmslow.play();
                             Config.muted = false;
                         }
